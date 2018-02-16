@@ -50,34 +50,7 @@ public class MainActivity extends Activity {
     private int count;
 
 
-    /*
-    List<Integer> powersEntrada = new ArrayList<>();
-    List<Integer> powerCentro = new ArrayList<>();
-    List<Integer> powerFundo = new ArrayList<>();
-    List<Integer> powerCisco1 = new ArrayList<>();
-    List<Integer> powerCisco2 = new ArrayList<>();
-    List<Integer> powerCisco3 = new ArrayList<>();
-    List<Integer> powerCisco4 = new ArrayList<>();
 
-    final static String entrada = "88:d7:f6:81:63:48";
-    final static String centro = "88:d7:f6:81:64:28";
-    final static String fundo = "88:d7:f6:81:63:38";
-    final static String cisco1 = "68:7f:74:aa:e8:fa";
-    final static String cisco2 = "68:7f:74:aa:ea:00";
-    final static String cisco3 = "c8:d7:19:e5:a1:e5";
-    final static String cisco4 = "c8:d7:19:e5:a2:23";
-
-    private double mediaExpurgadaEntrada, mediaExpurgadaCentro, mediaExpurgadaFundo,  mediaExpurgadaCisco1,mediaExpurgadaCisco2,mediaExpurgadaCisco3,mediaExpurgadaCisco4;
-    private double mediaEntrada, mediaCentro, mediaFundo, mediaCisco1, mediaCisco2, mediaCisco3, mediaCisco4;
-
-    private List<Integer> expurgedpowersEntrada = new ArrayList<>();
-    private List<Integer> expurgedPowersCentro = new ArrayList<>();
-    private List<Integer> expurgedPowersFundo = new ArrayList<>();
-    private List<Integer> expurgedPowersCisco1 = new ArrayList<>();
-    private List<Integer> expurgedPowersCisco2 = new ArrayList<>();
-    private List<Integer> expurgedPowersCisco3 = new ArrayList<>();
-    private List<Integer> expurgedPowersCisco4 = new ArrayList<>();
-    */
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,15 +70,24 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 powerBssid1.clear();
                 expurgedPowersBssid1.clear();
+                mediaBssid1 = 0;
+                mediaExpurgadaBssid1 = 0;
 
                 powerBssid2.clear();
                 expurgedPowersBssid2.clear();
+                mediaBssid2 = 0;
+                mediaExpurgadaBssid2 = 0;
 
                 powerBssid3.clear();
                 expurgedPowersBssid3.clear();
+                mediaBssid3 = 0;
+                mediaExpurgadaBssid3 = 0;
 
                 powerBssid4.clear();
                 expurgedPowersBssid4.clear();
+                mediaBssid4 = 0;
+                mediaExpurgadaBssid4 = 0;
+
                 count = 0;
 
                 sb.setLength(0);
@@ -137,7 +119,7 @@ public class MainActivity extends Activity {
     class WifiReceiver extends BroadcastReceiver {
         public void onReceive(Context c, final Intent intent) {
             count++;
-            // System.out.println("AQUI");
+
             if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction())){
                 registerReceiver(receiverWifi, filter);
                 mainWifi.startScan();
@@ -146,7 +128,7 @@ public class MainActivity extends Activity {
             sb = new StringBuilder();
             wifiList = mainWifi.getScanResults();
 
-            //System.out.println(wifiList.toString());
+
             ScanResult result;
 
             String ssid, bsssid;
@@ -156,7 +138,7 @@ public class MainActivity extends Activity {
                 ssid = result.SSID;
                 bsssid = result.BSSID;
                 rssi = result.level;
-                if(count < 1000){
+                if(count <= 300){
                     System.out.println(bsssid);
 
                     if(bsssid.equalsIgnoreCase(bssid1))
@@ -168,73 +150,38 @@ public class MainActivity extends Activity {
                     if(bsssid.equalsIgnoreCase(bssid4))
                         powerBssid4.add(rssi);
 
+                    if(count == 300){
+                        mediaBssid1 = meanRssi(powerBssid1);
+                        double desvioPadraoBssid1 = getStdDev(powerBssid1, mediaBssid1);
+                        expurgedPowersBssid1 = expurgePowers(powerBssid1, mediaBssid1, desvioPadraoBssid1);
+                        mediaExpurgadaBssid1 = meanRssi(expurgedPowersBssid1);
 
-                    mediaBssid1 = meanRssi(powerBssid1);
-                    double desvioPadraoBssid1 = getStdDev(powerBssid1, mediaBssid1);
-                    expurgedPowersBssid1 = expurgePowers(powerBssid1, mediaBssid1, desvioPadraoBssid1);
-                    mediaExpurgadaBssid1 = meanRssi(expurgedPowersBssid1);
+                        mediaBssid2 = meanRssi(powerBssid2);
+                        double desvioPadraoBssid2 = getStdDev(powerBssid2, mediaBssid2);
+                        expurgedPowersBssid2 = expurgePowers(powerBssid2,mediaBssid2, desvioPadraoBssid2);
+                        mediaExpurgadaBssid2 = meanRssi(expurgedPowersBssid2);
 
-                    mediaBssid2 = meanRssi(powerBssid2);
-                    double desvioPadraoBssid2 = getStdDev(powerBssid2, mediaBssid2);
-                    expurgedPowersBssid2 = expurgePowers(powerBssid2,mediaBssid2, desvioPadraoBssid2);
-                    mediaExpurgadaBssid2 = meanRssi(expurgedPowersBssid2);
+                        mediaBssid3 = meanRssi(powerBssid3);
+                        double desvioPadraoBssid3 = getStdDev(powerBssid3, mediaBssid3);
+                        expurgedPowersBssid3 = expurgePowers(powerBssid3,mediaBssid3, desvioPadraoBssid3);
+                        mediaExpurgadaBssid3 = meanRssi(expurgedPowersBssid3);
 
-                    mediaBssid3 = meanRssi(powerBssid3);
-                    double desvioPadraoBssid3 = getStdDev(powerBssid3, mediaBssid3);
-                    expurgedPowersBssid3 = expurgePowers(powerBssid3,mediaBssid3, desvioPadraoBssid3);
-                    mediaExpurgadaBssid3 = meanRssi(expurgedPowersBssid3);
+                        mediaBssid4 = meanRssi(powerBssid4);
+                        double desvioPadraoBssid4 = getStdDev(powerBssid4, mediaBssid4);
+                        expurgedPowersBssid4 = expurgePowers(powerBssid4, mediaBssid4, desvioPadraoBssid4);
+                        mediaExpurgadaBssid4 = meanRssi(expurgedPowersBssid4);
+                    }
 
-                    mediaBssid4 = meanRssi(powerBssid4);
-                    double desvioPadraoBssid4 = getStdDev(powerBssid4, mediaBssid4);
-                    expurgedPowersBssid4 = expurgePowers(powerBssid4, mediaBssid4, desvioPadraoBssid4);
-                    mediaExpurgadaBssid4 = meanRssi(expurgedPowersBssid4);
 
-                    /*
-                    mediaCisco2 = meanRssi(powerCisco2);
-                    double desvioPadraoCisco2 = getStdDev(powerCisco2, mediaCisco2);
-                    expurgedPowersCisco2 = expurgePowers(powerCisco2, mediaCisco2, desvioPadraoCisco2);
-                    mediaExpurgadaCisco2 = meanRssi(expurgedPowersCisco2);
-
-                    mediaCisco3 = meanRssi(powerCisco3);
-                    double desvioPadraoCisco3 = getStdDev(powerCisco3, mediaCisco3);
-                    expurgedPowersCisco3 = expurgePowers(powerCisco3, mediaCisco3, desvioPadraoCisco3);
-                    mediaExpurgadaCisco3 = meanRssi(expurgedPowersCisco3);
-
-                    mediaCisco4 = meanRssi(powerCisco4);
-                    double desvioPadraoCisco4 = getStdDev(powerCisco4, mediaCisco4);
-                    expurgedPowersCisco4 = expurgePowers(powerCisco4, mediaCisco4, desvioPadraoCisco4);
-                    mediaExpurgadaCisco4 = meanRssi(expurgedPowersCisco4);
-                       */
                 }
 
                 System.out.println("SSID: " + ssid);
                 System.out.println("BSSID: " + bsssid);
                 System.out.println("SIGNAL: " + rssi);
 
-                //sb.append("\n SSID = " + ssid);
-                // sb.append(" BSSID = " + bsssid);
-                // sb.append(" RSSSI = " + rssi);
-
             }
 
-            /*
-            if(count == 1000){
-                powerBssid1.clear();
-                expurgedPowersBssid1.clear();
 
-                powerBssid2.clear();
-                expurgedPowersBssid2.clear();
-
-                powerBssid3.clear();
-                expurgedPowersBssid3.clear();
-
-                powerBssid4.clear();
-                expurgedPowersBssid4.clear();
-
-                //count = 0;
-            }
-
-            */
 
             //TODO: switch ordenado consoante posição a registar.
             sb.append("\n" + count);
@@ -254,7 +201,7 @@ public class MainActivity extends Activity {
             mainText.setText(sb);
 
         }
-        //System.out.println(rssiLists.get(0).toString());
+
     }
 
     private double meanRssi(List<Integer> rssis){
