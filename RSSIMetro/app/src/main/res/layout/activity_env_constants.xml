@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="d3v.bnb.rssimetro.EnvConstants">
+
+    <EditText
+        android:id="@+id/editTextMeasureID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="128dp"
+        android:ems="10"
+        android:inputType="text|textPersonName"
+        android:text="Measure ID"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewShowConstans"
+        android:layout_width="215dp"
+        android:layout_height="116dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="284dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/CalcBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickCalcBtn"
+        android:text="Calculate"
+        tools:layout_editor_absoluteX="250dp"
+        tools:layout_editor_absoluteY="433dp" />
+</android.support.constraint.ConstraintLayout>
