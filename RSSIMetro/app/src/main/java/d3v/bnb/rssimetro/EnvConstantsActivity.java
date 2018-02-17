@@ -29,7 +29,7 @@ public class EnvConstantsActivity extends AppCompatActivity {
         textViewShowConstans = (TextView) findViewById(R.id.textViewShowConstans);
     }
 
-       public void onClickCalcBtn(View v) {
+       public void onClickBtnCalc(View v) {
 
         if (Utils.isEmpty(editTextMeasureID)) {
             Toast.makeText(getApplicationContext(), "Please fill the field Measure ID", Toast.LENGTH_LONG).show();
@@ -85,6 +85,10 @@ public class EnvConstantsActivity extends AppCompatActivity {
         i.putExtra("results", resultados);
         startActivity(i);
 
+
+    }
+
+    public void onClickBtnSave(View v){
 
     }
 

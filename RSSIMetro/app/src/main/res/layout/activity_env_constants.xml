@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="d3v.bnb.rssimetro.EnvConstantsActivity">
 
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="118dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="444dp"
+        android:onClick="onClickBtnSave"
+        android:text="Save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/editTextMeasureID"
         android:layout_width="wrap_content"
@@ -28,11 +39,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/CalcBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClickCalcBtn"
+        android:id="@+id/BtnCalc"
+        android:layout_width="118dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="264dp"
+        android:layout_marginTop="444dp"
+        android:onClick="onClickBtnCalc"
         android:text="Calculate"
-        tools:layout_editor_absoluteX="250dp"
-        tools:layout_editor_absoluteY="433dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
