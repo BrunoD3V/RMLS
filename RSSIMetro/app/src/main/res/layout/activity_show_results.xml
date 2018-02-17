@@ -4,6 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="d3v.bnb.rssimetro.ShowResults">
+    tools:context="d3v.bnb.rssimetro.ShowResultsActivity">
 
+    <TextView
+        android:id="@+id/showText"
+        android:layout_width="362dp"
+        android:layout_height="366dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnSaveConstants"
+        android:layout_width="360dp"
+        android:layout_height="wrap_content"
+        android:onClick="onClickbtnSaveConstants"
+        android:text="Save"
+        tools:layout_editor_absoluteX="7dp"
+        tools:layout_editor_absoluteY="407dp" />
 </android.support.constraint.ConstraintLayout>

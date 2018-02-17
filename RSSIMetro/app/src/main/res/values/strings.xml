@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RSSIMetro</string>
+    <string name="title_activity_env__constants">Env_Constants</string>
 </resources>

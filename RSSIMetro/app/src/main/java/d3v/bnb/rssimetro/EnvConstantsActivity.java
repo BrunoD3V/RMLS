@@ -15,7 +15,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 import java.util.ArrayList;
 
-public class EnvConstants extends AppCompatActivity {
+public class EnvConstantsActivity extends AppCompatActivity {
 
     private EditText editTextMeasureID;
     private TextView textViewShowConstans;
@@ -29,55 +29,64 @@ public class EnvConstants extends AppCompatActivity {
         textViewShowConstans = (TextView) findViewById(R.id.textViewShowConstans);
     }
 
- /*   public void onClickCalcBtn(View v) {
+       public void onClickCalcBtn(View v) {
 
-        if (isEmpty(editTextMeasureID)) {
-            Toast.makeText(getApplicationContext(), "Tem que preencher todos os campos", Toast.LENGTH_LONG).show();
+        if (Utils.isEmpty(editTextMeasureID)) {
+            Toast.makeText(getApplicationContext(), "Please fill the field Measure ID", Toast.LENGTH_LONG).show();
             return;
         }
 
         //TODO ir buscar as coordenadas da pos a BD e os resultados das medidas
-        double dB1 = Double.valueOf(Bssid1Edit.getText().toString());
 
 
-        double pB1 = Double.valueOf(pBssid1Edit.getText().toString());
-        double pB2 = Double.valueOf(pBssid2Edit.getText().toString());
-        double pB3 = Double.valueOf(pBssid3Edit.getText().toString());
-        double pB4 = Double.valueOf(pBssid4Edit.getText().toString());
+        double[] pos1 = {0,0,0};
+        double[] pos2 = {0,0,0};
+        double[] pos3 = {0,0,0};
+        double[] pos4 = {0,0,0};
+        double[] posM = {0,0,0};
+
+        double dB1 = getDistance(pos1, posM);
+        double dB2 = getDistance(pos2, posM);
+        double dB3 = getDistance(pos3, posM);
+        double dB4 = getDistance(pos4, posM);
+
+
+        double pB1 = 1;
+        double pB2 = 2;
+        double pB3 = 3;
+        double pB4 = 4;
 
         double[][] data = {{1, 10 * Math.log10(dB1)}, {1, 10 * Math.log10(dB2)},
                 {1, 10 * Math.log10(dB3)}, {1, 10 * Math.log10(dB4)}};
         double[][] Pot = {{pB1}, {pB2}, {pB3}, {pB4}};
-        //  double [][] inv = {{4,14}, {14,54}};
+
         RealMatrix M = MatrixUtils.createRealMatrix(data);
         RealMatrix RSSI = MatrixUtils.createRealMatrix(Pot);
         RealMatrix T = M.transpose();
         RealMatrix Res = T.multiply(M);
 
-        // RealMatrix Inv = MatrixUtils.createRealMatrix(inv);
+
 
         RealMatrix Inv = new LUDecomposition(Res).getSolver().getInverse();
-        //System.out.println(Inv.toString());
+
         RealMatrix Res2 = Inv.multiply(T);
         RealMatrix Rfinal = Res2.multiply(RSSI);
-        //double exp = (Rfinal.getEntry(1)-RSSI.getEntry(0,0))/(10 * -1 * Rfinal.getEntry(1,1));
-        //  double dist = Math.pow(10,exp);
-        // double teste = 10 * Math.log10(7.84);
+
         String resultados = Rfinal.toString();
         for (int i = 0; i <= 3; i++) {
             double exp = (Rfinal.getEntry(0, 0) - RSSI.getEntry(i, 0)) / (-10 * Rfinal.getEntry(1, 0));
             double dist = Math.pow(10, exp);
             double error = Math.abs(Math.pow(10, M.getEntry(i, 1) / 10) - dist) / Math.pow(10, M.getEntry(i, 1) / 10);
             System.out.println(Math.pow(10, M.getEntry(i, 1) / 10));
-            resultados += "\n distancia a " + i + " " + dist + " erro = " + error;
+            resultados += "\n distance to" + i + " " + dist + " error = " + error;
         }
 
-        Intent i = new Intent(this, ShowResults.class);
-        i.putExtra("resultados", resultados);
+        Intent i = new Intent(this, ShowResultsActivity.class);
+        i.putExtra("results", resultados);
         startActivity(i);
 
-        // mainText.setText(Double.valueOf(teste).toString());
-    } */
+
+    }
 
     public double getDistance(double[] pos1, double[] pos2) {
 
@@ -90,7 +99,9 @@ public class EnvConstants extends AppCompatActivity {
 
     }
 
-    private boolean isEmpty(EditText etText) {
-        return etText.getText().toString().trim().length() == 0;
-    }
+
+
+
+
+
 }

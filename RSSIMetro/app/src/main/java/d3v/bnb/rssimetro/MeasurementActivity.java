@@ -15,15 +15,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MeasurementActivity extends Activity {
 
-    Button btnRestart;
-    TextView mainText;
-    WifiManager mainWifi;
-    WifiReceiver receiverWifi;
-    List<ScanResult> wifiList;
+    private Button btnRestart;
+    private TextView mainText;
+    private WifiManager mainWifi;
+    private WifiReceiver receiverWifi;
+    private List<ScanResult> wifiList;
+
+    private EditText editTextPosID;
+
 
     private IntentFilter filter = new IntentFilter();
 
@@ -54,9 +59,15 @@ public class MainActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mainText = (TextView) findViewById(R.id.mainText);
+        setContentView(R.layout.activity_measurement);
+        mainText = (TextView) findViewById(R.id.showText);
         mainWifi = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        editTextPosID = (EditText) findViewById(R.id.editTextPosID);
+
+
+
+
+
         count = 0;
         receiverWifi = new WifiReceiver();
         registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
@@ -202,6 +213,14 @@ public class MainActivity extends Activity {
 
         }
 
+    }
+
+    public void onClickBtnSave(View v){
+        if(Utils.isEmpty(editTextPosID)){
+            Toast.makeText(getApplicationContext(), "Please fill the field Pos ID", Toast.LENGTH_LONG).show();
+            return;
+        }
+        //TODO save data to the bd
     }
 
     private double meanRssi(List<Integer> rssis){
