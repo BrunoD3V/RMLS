@@ -1,6 +1,9 @@
 package d3v.bnb.rssimetro.Services;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -14,63 +17,76 @@ import d3v.bnb.rssimetro.Models.Measurement;
 
 public class REST_Client {
 
-    public static void restInvoke(String requestType, String id, String outputStream ){
-        switch (requestType){
-            case "GET":
-                try {
-                    URL url = new URL("http://193.137.107.83:8080/RMLS_WS/webresources/_ws.measurements/" + id + "?");
+    public static String restGET(String id, String table) {
 
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod(requestType);
+        boolean success = false;
+        String result = "";
+        try {
+            URL url = new URL("http://193.137.106.74:8080/RMLS_WS/webresources/_ws." + table +"/"+ id + "?");
 
-                    if(connection.getResponseCode() == 200){
-                        //Success
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
 
-                    }
-                    else{
-                        //Error
+            if (connection.getResponseCode() == 200) {
+                //Success
+                success = true;
+                InputStream responseBody = connection.getInputStream();
+                InputStreamReader responseBodyReader = new InputStreamReader(responseBody, "UTF-8");
+                BufferedReader streamReader = new BufferedReader(responseBodyReader);
+                StringBuilder responseStrBuilder = new StringBuilder();
 
-                    }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
+                String inputStr;
+                while ((inputStr = streamReader.readLine()) != null)
+                    responseStrBuilder.append(inputStr);
 
-            case "PUT":
-                try {
-                    URL url = new URL("http://193.137.107.83:8080/RMLS_WS/webresources/_ws.measurements/" + id + "?");
+                result = responseStrBuilder.toString();
+                connection.disconnect();
 
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod(requestType);
-                    connection.setDoInput(true);
-                    connection.setRequestProperty("Content-Type", "application/xml");
+            } else {
+                //Error
 
-                    OutputStreamWriter out = new OutputStreamWriter(
-                            connection.getOutputStream());
-
-                    out.write(outputStream);
-
-                    out.close();
-
-                    connection.getInputStream();
-
-                    if(connection.getResponseCode() == 204){
-                        //Success
-                    }
-                    else{
-                        //Error
-                    }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-
-            case "DELETE":
-                break;
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        return (success)? result : "";
     }
+
+    public static String restPUT(String id, String outputStream, String table) {
+
+        String result = "";
+        try {
+            URL url = new URL("http://193.137.106.74:8080/RMLS_WS/webresources/_ws." + table + "/"+ id + "?");
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setDoInput(true);
+            connection.setRequestProperty("Content-Type", "application/xml");
+
+            //TODO: Catch connection failure
+            OutputStreamWriter out = new OutputStreamWriter(
+                    connection.getOutputStream());
+
+            out.write(outputStream);
+
+            out.close();
+
+            result = connection.getInputStream().toString();
+
+            if (connection.getResponseCode() == 204) {
+                //Success
+            } else {
+                //Error
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 }

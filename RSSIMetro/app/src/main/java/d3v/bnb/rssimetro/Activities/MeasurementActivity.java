@@ -16,6 +16,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,8 +37,8 @@ public class MeasurementActivity extends Activity {
     private Button btnRestart;
     private TextView mainText;
     private WifiManager mainWifi;
-    private WifiReceiver receiverWifi;
-    private List<ScanResult> wifiList;
+    public WifiReceiver receiverWifi;
+    public List<ScanResult> wifiList;
 
     private EditText editTextPosID;
 
@@ -74,6 +75,10 @@ public class MeasurementActivity extends Activity {
         mainText = (TextView) findViewById(R.id.showText);
         mainWifi = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         editTextPosID = (EditText) findViewById(R.id.editTextPosID);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
 
         count = 0;
         receiverWifi = new WifiReceiver();
@@ -135,6 +140,8 @@ public class MeasurementActivity extends Activity {
     }
 
 
+
+
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, 0, 0, "Refresh");
         return super.onCreateOptionsMenu(menu);
@@ -160,15 +167,8 @@ public class MeasurementActivity extends Activity {
         public void onReceive(Context c, final Intent intent) {
             count++;
 
-            if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction())){
-                registerReceiver(receiverWifi, filter);
-                mainWifi.startScan();
-            }
-
             sb = new StringBuilder();
-            wifiList = mainWifi.getScanResults();
-
-
+            wifiList = getWifiList(mainWifi,intent);
             ScanResult result;
 
             String ssid, bsssid;
@@ -178,7 +178,7 @@ public class MeasurementActivity extends Activity {
                 ssid = result.SSID;
                 bsssid = result.BSSID;
                 rssi = result.level;
-                if(count <= 300){
+                if(count <= 10){
                     System.out.println(bsssid);
 
                     if(bsssid.equalsIgnoreCase(bssid1))
@@ -190,7 +190,7 @@ public class MeasurementActivity extends Activity {
                     if(bsssid.equalsIgnoreCase(bssid4))
                         powerBssid4.add(rssi);
 
-                    if(count == 300){
+                    if(count == 9){
                         mediaBssid1 = meanRssi(powerBssid1);
                         double desvioPadraoBssid1 = getStdDev(powerBssid1, mediaBssid1);
                         expurgedPowersBssid1 = expurgePowers(powerBssid1, mediaBssid1, desvioPadraoBssid1);
@@ -216,6 +216,7 @@ public class MeasurementActivity extends Activity {
                 System.out.println("BSSID: " + bsssid);
                 System.out.println("SIGNAL: " + rssi);
             }
+
             //TODO: switch ordenado consoante posição a registar.
             sb.append("\n" + count);
             sb.append("\n BSSID 1:");
@@ -233,6 +234,16 @@ public class MeasurementActivity extends Activity {
 
             mainText.setText(sb);
         }
+
+        public List<ScanResult> getWifiList(WifiManager mainWifi, final Intent intent){
+            if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction())){
+                registerReceiver(receiverWifi, filter);
+                mainWifi.startScan();
+            }
+
+
+            return mainWifi.getScanResults();
+        }
     }
 
     public void onClickBtnSave(View v){
@@ -242,11 +253,11 @@ public class MeasurementActivity extends Activity {
         }
 
         //TODO: valor do equipamento tem de ser dinâmico
-        Measurement entity = new Measurement(editTextPosID.getText().toString(), XIAOMI, mediaBssid1, mediaBssid2 , mediaBssid3, mediaBssid4);
+        Measurement entity = new Measurement("pos" + editTextPosID.getText().toString(), XIAOMI, mediaBssid1, mediaBssid2 , mediaBssid3, mediaBssid4);
 
-        String output = DBO.XMLToRequest(entity);
-
-        REST_Client.restInvoke("PUT", editTextPosID.getText().toString(), output);
+        String output = DBO.XMLToRequestPUT_Measurement(entity);
+        String table = "measurements";
+        REST_Client.restPUT( "pos" +editTextPosID.getText().toString(), output , table);
 
     }
 

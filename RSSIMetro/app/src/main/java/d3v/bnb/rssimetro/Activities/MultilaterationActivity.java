@@ -1,5 +1,6 @@
 package d3v.bnb.rssimetro.Activities;
 
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,10 @@ public class MultilaterationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_multilateration);
 
         txtShowPosition = (TextView) findViewById(R.id.txtShowPosition);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
     }
 
     public void onClickbtnCalcPos(View v){
