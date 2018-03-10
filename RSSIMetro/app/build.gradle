@@ -18,7 +18,7 @@ android {
         }
     }
 
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/LICENCE'
         exclude 'META-INF/licence.txt'
