@@ -23,8 +23,8 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="96dp"
         android:ems="10"
+        android:hint="Pos ID"
         android:inputType="text|textPersonName"
-        android:text="Pos ID"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

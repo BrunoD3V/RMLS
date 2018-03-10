@@ -1,6 +1,7 @@
 package d3v.bnb.rssimetro.Activities;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,10 @@ public class ShowResultsActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         String resultados = i.getStringExtra("results");
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
 
         mainText.setText(resultados);
     }

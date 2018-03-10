@@ -18,12 +18,12 @@ public class Measurement {
     public Measurement(String measurementID, String equipType, double rssi1, double rssi2, double rssi3, double rssi4) {
         this.measurementID = measurementID;
         //posxxmxx - ID_Template
-        this.posID = this.measurementID.substring(5); 
+        this.posID = this.measurementID;
         this.equipType = equipType;
-        this.rssi1 = rssi1;
-        this.rssi2 = rssi2;
-        this.rssi3 = rssi3;
-        this.rssi4 = rssi4;
+        this.rssi1 = rssi1 * (-1);
+        this.rssi2 = rssi2 * (-1);
+        this.rssi3 = rssi3 * (-1);
+        this.rssi4 = rssi4 * (-1);
     }
 
     public Measurement(String measurementID) {

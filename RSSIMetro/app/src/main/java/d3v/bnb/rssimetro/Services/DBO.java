@@ -10,7 +10,7 @@ import d3v.bnb.rssimetro.Models.Measurement;
 
 public class DBO {
 
-    public static String XMLToRequest (Measurement entity){
+    public static String XMLToRequestPUT_Measurement(Measurement entity){
 
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n" +
                 "    <measurements> \n" +

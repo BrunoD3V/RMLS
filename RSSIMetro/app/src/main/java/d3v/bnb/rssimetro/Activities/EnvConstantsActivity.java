@@ -1,6 +1,7 @@
 package d3v.bnb.rssimetro.Activities;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
 import d3v.bnb.rssimetro.R;
+import d3v.bnb.rssimetro.Services.REST_Client;
 import d3v.bnb.rssimetro.Utilities.Utils;
 
 public class EnvConstantsActivity extends AppCompatActivity {
@@ -27,9 +29,13 @@ public class EnvConstantsActivity extends AppCompatActivity {
 
         editTextMeasureID = (EditText) findViewById(R.id.editTextMeasureID);
         textViewShowConstans = (TextView) findViewById(R.id.textViewShowConstans);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
     }
 
-       public void onClickBtnCalc(View v) {
+    public void onClickBtnCalc(View v) {
 
         if (Utils.isEmpty(editTextMeasureID)) {
             Toast.makeText(getApplicationContext(), "Please fill the field Measure ID", Toast.LENGTH_LONG).show();
@@ -38,18 +44,25 @@ public class EnvConstantsActivity extends AppCompatActivity {
 
         //TODO ir buscar as coordenadas da pos a BD e os resultados das medidas
 
+        String table = "positions";
+        REST_Client.restGET( editTextMeasureID.getText().toString(), table);
 
-        double[] pos1 = {0,0,0};
-        double[] pos2 = {0,0,0};
-        double[] pos3 = {0,0,0};
-        double[] pos4 = {0,0,0};
-        double[] posM = {0,0,0};
+        String [] queryResults = new String[4];
+
+        for(int i = 1 ; i <= 4; i++){
+            queryResults[i-1] = REST_Client.restGET("r" + i, table);
+        }
+
+        double[] pos1 = {0, 0, 0};
+        double[] pos2 = {0, 0, 0};
+        double[] pos3 = {0, 0, 0};
+        double[] pos4 = {0, 0, 0};
+        double[] posM = {0, 0, 0};
 
         double dB1 = getDistance(pos1, posM);
         double dB2 = getDistance(pos2, posM);
         double dB3 = getDistance(pos3, posM);
         double dB4 = getDistance(pos4, posM);
-
 
         double pB1 = 1;
         double pB2 = 2;
@@ -64,8 +77,6 @@ public class EnvConstantsActivity extends AppCompatActivity {
         RealMatrix RSSI = MatrixUtils.createRealMatrix(Pot);
         RealMatrix T = M.transpose();
         RealMatrix Res = T.multiply(M);
-
-
 
         RealMatrix Inv = new LUDecomposition(Res).getSolver().getInverse();
 
@@ -88,7 +99,7 @@ public class EnvConstantsActivity extends AppCompatActivity {
 
     }
 
-    public void onClickBtnSave(View v){
+    public void onClickBtnSave(View v) {
 
     }
 
@@ -102,10 +113,6 @@ public class EnvConstantsActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
 
 
 }
