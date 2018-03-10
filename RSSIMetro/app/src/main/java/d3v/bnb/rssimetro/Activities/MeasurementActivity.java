@@ -3,14 +3,19 @@ package d3v.bnb.rssimetro.Activities;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +32,7 @@ import d3v.bnb.rssimetro.Utilities.Utils;
 
 public class MeasurementActivity extends Activity {
 
+    private static final String TAG = "MeasurementActivity";
     private Button btnRestart;
     private TextView mainText;
     private WifiManager mainWifi;
@@ -72,7 +78,8 @@ public class MeasurementActivity extends Activity {
         count = 0;
         receiverWifi = new WifiReceiver();
         registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        mainWifi.startScan();
+        //mainWifi.startScan();
+        requestLocationPermissions();
         mainText.setText("\\nStarting Scan...\\n");
 
         btnRestart = (Button) findViewById(R.id.btnRestart);
@@ -106,6 +113,27 @@ public class MeasurementActivity extends Activity {
             }
         });
     }
+    @TargetApi(23)
+    public void requestLocationPermissions(){
+        if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "LOCATION PERMISSION GRANTED");
+                    mainWifi.startScan();
+                } else {
+                    Log.i(TAG, "LOCATION PERMISSION NOT GRANTED");
+                }
+                return;
+            }
+        }
+    }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, 0, 0, "Refresh");
